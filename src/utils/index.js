@@ -3,4 +3,5 @@ import redis from './redis';
 import swagDocHandler from './swagDocHandler';
 import errorHandle from './errorHandle';
 
-export { db, swagDocHandler, errorHandle, redis };
+let redisClient = redis.client;
+export { db, swagDocHandler, errorHandle, redisClient };
