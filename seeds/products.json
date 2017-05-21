@@ -1,0 +1,26 @@
+[
+  {
+    "sku": "SKU160745",
+    "name": "Claudyta Monogram Flap Sling Bag",
+    "price": 125000,
+    "quantity": 5
+  },
+  {
+    "sku": "SKU025726",
+    "name": "Revanza Two Tone Shopper Sling Bag",
+    "price": 135000,    
+    "quantity": 3
+  },
+  {
+    "sku": "SKU274856",
+    "name": "Kesila Two Tone Saddle Sling Bag",
+    "price": 127000,    
+    "quantity": 4
+  },
+  {
+    "sku": "SKU029457",
+    "name": "Bresinia Two Tone Satchel Sling Bag",
+    "price": 179000,    
+    "quantity": 3
+  }
+]
