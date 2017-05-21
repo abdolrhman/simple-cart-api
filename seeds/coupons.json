@@ -1,0 +1,17 @@
+[
+  {
+    "deal": "Promo Spesial November",
+    "amount": 15,
+    "quantity": 500
+  },
+  {
+    "deal": "Promo Spesial Ramadhan",
+    "amount": 30,
+    "quantity": 300
+  },
+  {
+    "deal": "Promo Spesial Lebaran",
+    "amount": 35,
+    "quantity": 424
+  }
+]
