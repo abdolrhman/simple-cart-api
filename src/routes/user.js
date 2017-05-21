@@ -1,6 +1,7 @@
 import express from 'express';
 import sha1 from 'sha1';
-import randomstring from 'randomstring';
+import jwt from 'jsonwebtoken';
+import config from '../config';
 
 import { User } from 'models';
 
@@ -58,13 +59,21 @@ router.get('/', async (req, res) => {
  */
 router.post('/login', async (req, res, next) => {
   const { name, password } = req.body;
+  const token = jwt.sign({
+    name: name,
+    role: 'user'
+  }, config.jwtSecret);
+
   try {
     const user = await User.findOne({
       name,
       password: sha1(password)
     });
     if (user) {
-      return res.send(user);
+      return res.send({
+        token: token,
+        user: user
+      });
     }
     next({ msg: 'wrong username or password', status: 401 });
   } catch (err) {
@@ -101,7 +110,6 @@ router.post('/login', async (req, res, next) => {
 router.post('/create', async (req, res, next) => {
   const { name, password } = req.body;
   try {
-    const token = `Token ${randomstring.generate(20)}${Date.now()}${randomstring.generate(20)}`;
     let user = await User.findOne({ name });
     if (user) {
       return next({ msg: 'user already existed', status: 403 });
@@ -109,8 +117,7 @@ router.post('/create', async (req, res, next) => {
     user = new User({
       name,
       password: sha1(password),
-      role: 'user',
-      token,
+      role: 'user'
     });
     user = await user.save();
     return res.send(user);

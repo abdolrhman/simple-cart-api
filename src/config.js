@@ -1,6 +1,7 @@
 const env = process.env.NODE_ENV;
 const common = {
-  port: 8880
+  port: 8880,
+  jwtSecret: 'Z7pp7Lgn5FEKeX2QfGOqwe0k0uCZNX9RLuW7yzAL'
 };
 const config = {
   develop: {

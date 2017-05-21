@@ -4,8 +4,7 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   name: String,
   password: String,
-  role: String,
-  token: String
+  role: String
 });
 
 UserSchema.options.toJSON = UserSchema.options.toJSON || {};
@@ -31,9 +30,6 @@ const User = mongoose.model('user', UserSchema);
  *       role:
  *         type: string
  *         default: ROLE
- *       token:
- *         type: string
- *         default: TOKEN
  */
 
 export default User;

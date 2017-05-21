@@ -1,20 +1,4 @@
-import { User } from 'models';
+import expressJwt from 'express-jwt';
+import config from '../config';
 
-export async function ensureLogin(req, res, next) {
-  const token = req.headers.authorization;
-  if (token) {
-    req.user = await User.findOne({ token });
-  }
-  if (req.user) {
-    next();
-  } else {
-    // 不需要权限的路由
-    const excludeUrls = ['/user/create', '/user/login'];
-    for (const excludeUrl of excludeUrls) {
-      if (req.url.indexOf(excludeUrl) === 0) {
-        return next();
-      }
-    }
-    next({ status: 401, msg: 'not authorized' });
-  }
-}
+export const ensureLogin = expressJwt({ secret: config.jwtSecret }).unless({path: ['/user/create', '/user/login']});
