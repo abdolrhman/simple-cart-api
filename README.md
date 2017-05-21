@@ -20,7 +20,7 @@ The situation in an online store are stated below. This scenario we would like t
     - [ ] Coupon has certain amount of discount, can be percentage or nominal
     - [ ] Coupon can be applied to order before submission
 4. Order transaction process flow and verification; single transaction has the following steps:
-    - [ ] Customer can add product to an order
+    - [x] Customer can add product to an order
     - [ ] Customer can apply one coupon to order, only one coupon can be applied to order
     - [ ] Customer can submit an order and the order is finalized
     - [ ] Customer can only pay via bank transfer
