@@ -1,6 +1,7 @@
 import express from 'express';
 import user from './user';
 import cart from './cart';
+import coupon from './coupon';
 import { ensureLogin } from './privilege';
 import { swagDocHandler } from '../utils';
 
@@ -20,5 +21,6 @@ router.use(ensureLogin);
 // example user routes providing: [create|login|get] method.
 router.use('/user', user);
 router.use('/cart', cart);
+router.use('/coupon', coupon);
 
 export default router;
