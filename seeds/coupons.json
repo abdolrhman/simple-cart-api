@@ -1,16 +1,19 @@
 [
   {
     "deal": "Promo Spesial November",
+    "promoCode": "NOVEMBER15",
     "amount": 15,
     "quantity": 500
   },
   {
     "deal": "Promo Spesial Ramadhan",
+    "promoCode": "PUASA30",
     "amount": 30,
     "quantity": 300
   },
   {
     "deal": "Promo Spesial Lebaran",
+    "promoCode": "LEBARAN35",
     "amount": 35,
     "quantity": 424
   }

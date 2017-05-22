@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 const CouponSchema = new Schema({
   deal: String,
+  promoCode: String,
   amount: Number,
   quantity: Number
 });
