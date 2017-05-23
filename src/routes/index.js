@@ -9,7 +9,7 @@ import { ensureLogin } from './privilege'
 const router = new express.Router()
 
 router.get('/', async (req, res) => {
-  res.send({ msg: 'HELLO WORLD' })
+  res.send({ msg: 'hello world' })
 })
 
 router.use(ensureLogin)
