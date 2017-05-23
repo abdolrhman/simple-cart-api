@@ -1,43 +1,41 @@
 import express from 'express';
 import _ from 'lodash';
-
-import { Product } from 'models';
-import { redisClient } from 'utils';
+import { helper, redisClient } from 'utils';
 
 const router = new express.Router();
 
-const build = (username) => 'rkey-' + username;
+const CART_KEY = 'CART_'
 
 router.get('/', async (req, res) => {
-  let result = await redisClient.hgetallAsync(build(req.user.name));
-
-  let cartItems = _.map(result, (value, prop) => {
-    return { product: prop, quantity: value };
-  });
-
-  return res.status(200).send({
-    'status': 'OK',
-    'cart_id': build(req.user.name),
-    'cart': cartItems,
-    'message': null
-  })
+  let cart = await helper.updateCartAsync(req.user.name)
+  return res.status(200).send(cart)
 });
 
-// TODO: Add option to put paremeter in query string instead of request body
-router.post('/add', async (req, res) => {
+router.post('/', async (req, res) => {
   let { productId, quantity } = req.body;
   if (!quantity) quantity = 1;
 
-  let result = await redisClient.hgetallAsync(build(req.user.name));
+  redisClient.hmset(CART_KEY + req.user.name, productId, quantity);  
+  return res.status(200).send({
+    'status': 'OK',
+    'message': `Product ${productId} has been added to cart`
+  })
+});
+
+router.patch('/', async (req, res) => {
+  let { productId, quantity } = req.body;
+  if (!quantity) quantity = 1;
+
+  let result = await redisClient.hgetallAsync(CART_KEY + req.user.name);
 
   if (_.has(result, productId)) {
-    redisClient.hincrby(build(req.user.name), productId, quantity, (err, res) => {
+    redisClient.hincrby(CART_KEY + req.user.name, productId, quantity, (err, res) => {
       if (_.toInteger(result[productId]) + _.toInteger(quantity) <= 0) {
-        redisClient.hdel(build(req.user.name), productId);
+        redisClient.hdel(CART_KEY + req.user.name, productId);
       }
     });   
   } else {
-    redisClient.hmset(build(req.user.name), productId, quantity);    
+    redisClient.hmset(CART_KEY + req.user.name, productId, quantity);    
   }
 
   return res.status(200).send({
@@ -46,9 +44,9 @@ router.post('/add', async (req, res) => {
   })
 });
 
-router.delete('/delete', (req, res) => {
+router.delete('/', (req, res) => {
   let { productId } = req.body;
-  redisClient.hdel(build(req.user.name), productId, async (err, result) => {
+  redisClient.hdel(CART_KEY + req.user.name, productId, async (err, result) => {
     if (!err) {
       return res.status(200).send({
         'status': 'OK',

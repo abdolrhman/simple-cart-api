@@ -6,28 +6,24 @@ import { redisClient } from 'utils';
 
 const router = new express.Router();
 
-const build = (username) => 'uid-' + username;
+const COUPON_KEY = 'COUPON_USER_LIST'
 
-router.post('/add', async (req, res) => {
+router.post('/', async (req, res) => {
   let { promoCode } = req.body;
-  let counter = await redisClient.hgetAsync(build('coupon-user'), build(req.user.name));
-
-  let discount = await redisClient.hgetallAsync(promoCode);
-
-  if (!discount) {
-    discount = await Coupon.findOne({ promoCode });
-    // Cache the result to redis for better performance
-    redisClient.hset(promoCode, discount.amount, discount.quantity);
-  }
+  let counter = await redisClient.hgetAsync(COUPON_KEY, req.user.name);
 
   if (counter) {
     return res.status(200).send({
       'status': 'ERROR',
-      'message': `You already use this ${promoCode} promo code`
+      'message': `You already use ${counter} promo code`
     })
-  } else if (discount) {
-    // Create a list for every user who already use the promo code
-    redisClient.hset(build('coupon-user'), build(req.user.name), promoCode);
+  }
+
+  let discount = await redisClient.hgetallAsync(promoCode);
+  if (!discount) discount = await Coupon.findOne({ promoCode });
+
+  if (discount) {
+    redisClient.hset(COUPON_KEY, req.user.name, promoCode);
 
     return res.status(200).send({
       'status': 'OK',
@@ -41,9 +37,9 @@ router.post('/add', async (req, res) => {
   }
 });
 
-router.delete('/delete', (req, res) => {
+router.delete('/', (req, res) => {
   let { promoCode } = req.body;
-  redisClient.hdel(build('coupon-user'), build(req.user.name));
+  redisClient.hdel(COUPON_KEY, req.user.name);
   return res.status(200).send({
     'status': 'OK',
     'message': `Your ${promoCode} has been deleted`
