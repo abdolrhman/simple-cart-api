@@ -23,7 +23,7 @@ const init = () => {
       })
       db.once('open', () => {
         status = 'CONNECTED'
-        log.info('Database connected')
+        // log.info('Database connected')
         resolve()
       })
     })
