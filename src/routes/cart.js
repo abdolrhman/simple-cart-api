@@ -47,7 +47,7 @@ router.patch('/', async (req, res) => {
 router.delete('/', (req, res) => {
   let { productId } = req.body
   redisClient.hdel(CART_KEY + req.user.name, productId, async (err, result) => {
-    if (!err) {
+    if (!err && result) {
       return res.status(200).send({
         'status': 'OK',
         'message': `Product ${productId} has been removed from cart`
