@@ -5,7 +5,7 @@ const ProductSchema = new Schema({
   sku: String,
   name: String,
   price: Number,
-  quantity: Number
+  stock: Number
 });
 
 ProductSchema.options.toJSON = ProductSchema.options.toJSON || {};
