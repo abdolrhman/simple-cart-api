@@ -14,10 +14,6 @@ router.get('/', async (req, res) => {
 
 router.post('/login', async (req, res, next) => {
   const { name, password } = req.body
-  const token = jwt.sign({
-    name: name,
-    role: 'user'
-  }, config.jwtSecret)
 
   try {
     const user = await User.findOne({
@@ -25,6 +21,10 @@ router.post('/login', async (req, res, next) => {
       password: sha1(password)
     })
     if (user) {
+      const token = jwt.sign({
+        name: name,
+        role: user.role
+      }, config.jwtSecret)
       return res.send({
         token: token,
         user: user
