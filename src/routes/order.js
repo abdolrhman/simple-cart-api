@@ -42,11 +42,20 @@ router.post('/', async (req, res) => {
   let order = new Order(cart)
   order = await order.save()
 
-  _.forEach(order.products, (item) => {
-    // TODO: Check product stock and return error if empty
-    Product.findOneAndUpdate({ sku: item.sku }, {$inc: { stock: -1 }})
+  _.forEach(order.products, async (item) => {
+    let itemQuantity = await redisClient.hgetallAsync(CART_KEY + req.user.name)
+
+    Product.findOneAndUpdate({ sku: item.sku }, {$inc: { stock: -_.toInteger(itemQuantity[item.sku]) }}, { new: true })
       .exec(function (err, result) {
         if (err) throw err
+
+        // TODO: Do unit test for checking product stock
+        if (result.stock <= 0) {
+          return res.status(200).send({
+            'status': 'ERROR',
+            'message': `The product ${item.sku} is out of stock`
+          })
+        }
       })
   })
 
