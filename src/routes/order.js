@@ -2,15 +2,25 @@ import express from 'express'
 import _ from 'lodash'
 import base64 from 'base-64'
 
-import { Order, Payment } from 'models'
-import { helper } from 'utils'
+import { Order, Payment, Product, Coupon } from 'models'
+import { helper, redisClient } from 'utils'
 
 const router = new express.Router()
+
+const CART_KEY = 'CART_'
+const COUPON_KEY = 'COUPON_USER_LIST'
 
 router.get('/', async (req, res) => {
   let { ref } = req.query
 
   let order = await await Order.findOne({ orderNumber: ref })
+
+  if (!order) {
+    return res.status(200).send({
+      'status': 'ERROR',
+      'message': `Order ${ref} not found`
+    })
+  }
 
   return res.status(200).send(order)
 })
@@ -25,7 +35,6 @@ router.post('/', async (req, res) => {
     reference: '6129305'
   }
 
-  // TODO: modify updateCartAsync so it can take status argument
   let cart = await helper.updateCartAsync(req.user.name)
   cart.status = 'waiting payment'
   cart = _.omit(_.assign(cart, { shipping, payment }, orderNumber), 'orderId')
@@ -33,16 +42,38 @@ router.post('/', async (req, res) => {
   let order = new Order(cart)
   order = await order.save()
 
+  _.forEach(order.products, (item) => {
+    // TODO: Check product stock and return error if empty
+    Product.findOneAndUpdate({ sku: item.sku }, {$inc: { stock: -1 }})
+      .exec(function (err, result) {
+        if (err) throw err
+      })
+  })
+
+  Coupon.findOneAndUpdate({ promoCode: order.coupon.promoCode }, {$inc: { stock: -1 }})
+    .exec(function (err, result) {
+      if (err) throw err
+    })
+  redisClient.del(CART_KEY + req.user.name)
+  redisClient.hdel(COUPON_KEY, req.user.name)
+
   return res.status(200).send(order)
 })
 
 router.post('/track', async (req, res) => {
   let { trackingNumber } = req.body
   let order = await Order.findOne({ 'shipping.trackingNumber': trackingNumber })
+  if (!order) {
+    return res.status(200).send({
+      'status': 'ERROR',
+      'message': `Your tracking number ${trackingNumber} is invalid`
+    })
+  }
   return res.status(200).send(_.omit(order.toJSON(), ['products', 'payment', 'coupon', 'user']))
 })
 
 router.post('/verify', async (req, res) => {
+  // TODO: Check if orderNumber is valid or not
   let { orderNumber, name, vendor, reference } = req.body
   let verification = {
     order: orderNumber,
@@ -61,12 +92,23 @@ router.post('/verify', async (req, res) => {
 })
 
 router.get('/all', async (req, res) => {
+  if (req.user.role !== 'admin') {
+    return res.status(200).send({
+      'status': 'ERROR',
+      'message': `You are prohibited to access this url`
+    })
+  }
   let order = await await Order.find({})
-
   return res.status(200).send(order)
 })
 
 router.post('/update', async (req, res) => {
+  if (req.user.role !== 'admin') {
+    return res.status(200).send({
+      'status': 'ERROR',
+      'message': `You are prohibited to access this url`
+    })
+  }
   let { orderNumber, status, trackingNumber } = req.body
   let order = await Order.findOne({ orderNumber })
 
