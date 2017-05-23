@@ -2,6 +2,8 @@ import express from 'express';
 import user from './user';
 import cart from './cart';
 import coupon from './coupon';
+import order from './order';
+
 import { ensureLogin } from './privilege';
 import { swagDocHandler } from '../utils';
 
@@ -22,5 +24,6 @@ router.use(ensureLogin);
 router.use('/user', user);
 router.use('/cart', cart);
 router.use('/coupon', coupon);
+router.use('/order', order);
 
 export default router;
