@@ -4,7 +4,7 @@ const common = {
   jwtSecret: 'Z7pp7Lgn5FEKeX2QfGOqwe0k0uCZNX9RLuW7yzAL'
 }
 const config = {
-  develop: {
+  development: {
     mongodb: {
       host: '127.0.0.1',
       database: 'example'
