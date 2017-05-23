@@ -1,15 +1,16 @@
 import redis from 'redis'
-import config from '../config';
-import Promise from 'bluebird';
+import config from '../config'
+import Promise from 'bluebird'
 
-const client = Promise.promisifyAll(redis.createClient(config.redis));
+const client = Promise.promisifyAll(redis.createClient(config.redis))
 
 client.on('connect', function (err) {
-  console.log('Client has connected to Redis');
-});
+  if (err) console.log('An error occured ' + err)
+  console.log('Client has connected to Redis')
+})
 
 client.on('error', function (err) {
-  console.log('An error occured ' + err);
-});
+  console.log('An error occured ' + err)
+})
 
-export default { client };
+export default { client }

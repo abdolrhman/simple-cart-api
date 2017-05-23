@@ -1,128 +1,57 @@
-import express from 'express';
-import sha1 from 'sha1';
-import jwt from 'jsonwebtoken';
-import config from '../config';
+import express from 'express'
+import sha1 from 'sha1'
+import jwt from 'jsonwebtoken'
+import config from '../config'
 
-import { User } from 'models';
+import { User } from 'models'
 
-const router = new express.Router();
+const router = new express.Router()
 
-/**
- * @swagger
- * /user:
- *   get:
- *     summary: user list
- *     description: return user list
- *     tags:
- *       - User
- *     responses:
- *       200:
- *         description: users
- *         schema:
- *           type: object
- *           properties:
- *             users:
- *               type: array
- *               items:
- *                 $ref: '#/definitions/User'
- */
 router.get('/', async (req, res) => {
-  const users = await User.find();
-  return res.send({ users });
-});
+  const users = await User.find()
+  return res.send({ users })
+})
 
-/**
- * @swagger
- * /user/login:
- *   post:
- *     summary: user login
- *     description: user login,return user info with token
- *     tags:
- *       - User
- *     parameters:
- *       - name: user
- *         in: body
- *         required: true
- *         description: user and password
- *         schema:
- *           type: object
- *           properties:
- *             name:
- *               type: string
- *               default: username
- *             password:
- *               type: string
- *               default: password
- *     responses:
- *       200:
- *         description: useinfo including token
- */
 router.post('/login', async (req, res, next) => {
-  const { name, password } = req.body;
+  const { name, password } = req.body
   const token = jwt.sign({
     name: name,
     role: 'user'
-  }, config.jwtSecret);
+  }, config.jwtSecret)
 
   try {
     const user = await User.findOne({
       name,
       password: sha1(password)
-    });
+    })
     if (user) {
       return res.send({
         token: token,
         user: user
-      });
+      })
     }
-    next({ msg: 'wrong username or password', status: 401 });
+    next({ msg: 'wrong username or password', status: 401 })
   } catch (err) {
-    next(err);
+    next(err)
   }
-});
+})
 
-/**
- * @swagger
- * /user/create:
- *   post:
- *     summary: register user
- *     description: create user
- *     tags:
- *       - User
- *     parameters:
- *       - name: user
- *         in: body
- *         required: true
- *         description: username and password
- *         schema:
- *           type: object
- *           properties:
- *             name:
- *               type: string
- *               default: username
- *             password:
- *               type: string
- *               default: password
- *     responses:
- *       200:
- *         description: create new user
- */
 router.post('/create', async (req, res, next) => {
-  const { name, password } = req.body;
+  const { name, password } = req.body
   try {
-    let user = await User.findOne({ name });
+    let user = await User.findOne({ name })
     if (user) {
-      return next({ msg: 'user already existed', status: 403 });
+      return next({ msg: 'user already existed', status: 403 })
     }
     user = new User({
       name,
       password: sha1(password),
       role: 'user'
-    });
-    user = await user.save();
-    return res.send(user);
+    })
+    user = await user.save()
+    return res.send(user)
   } catch (err) {
-    next(err);
+    next(err)
   }
-});
-export default router;
+})
+export default router

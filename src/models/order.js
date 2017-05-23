@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 const OrderSchema = new Schema({
   orderId: String,
   orderNumber: String,
@@ -38,9 +38,9 @@ const OrderSchema = new Schema({
     vendor: String,
     reference: String
   }
-});
+})
 
-OrderSchema.options.toJSON = OrderSchema.options.toJSON || {};
+OrderSchema.options.toJSON = OrderSchema.options.toJSON || {}
 
-const Order = mongoose.model('order', OrderSchema);
-export default Order;
+const Order = mongoose.model('order', OrderSchema)
+export default Order

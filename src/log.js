@@ -1,4 +1,4 @@
-import log from 'loglevel';
-log.setLevel('trace');
+import log from 'loglevel'
+log.setLevel('trace')
 
-export default log;
+export default log
