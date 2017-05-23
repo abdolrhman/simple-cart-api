@@ -5,7 +5,7 @@ const CouponSchema = new Schema({
   deal: String,
   promoCode: String,
   amount: Number,
-  quantity: Number
+  stock: Number
 })
 
 CouponSchema.options.toJSON = CouponSchema.options.toJSON || {}
