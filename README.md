@@ -103,6 +103,10 @@ Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.
   npm install -g seed babel-istanbul
   ```
 3. Make sure that Redis and Mongodb are running on localhost with default port
+4. If there is an error, I recomend you to clear Redis using this
+  ```
+  redis-cli flushdb
+  ```
 
 ## Endpoints
 
