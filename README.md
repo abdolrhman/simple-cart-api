@@ -103,3 +103,30 @@ Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.
   npm install -g seed babel-istanbul
   ```
 3. Make sure that Redis and Mongodb are running on localhost with default port
+
+## Endpoints
+
+### User resources
+
+- **[<code>POST</code> user/login](https://github.com/husnulhamidiah/simple-cart-api/blob/master/docs/user/POST_user_login.md)**
+
+### Cart resources
+
+- **[<code>POST</code> cart](https://github.com/husnulhamidiah/simple-cart-api/blob/master/docs/cart/POST_cart.md)**
+- **[<code>PATCH</code> cart](https://github.com/husnulhamidiah/simple-cart-api/blob/master/docs/cart/PATCH_cart.md)** 
+- **[<code>DELETE</code> cart](https://github.com/husnulhamidiah/simple-cart-api/blob/master/docs/cart/DELETE_cart.md)**
+- **[<code>GET</code> cart](https://github.com/husnulhamidiah/simple-cart-api/blob/master/docs/cart/GET_cart.md)**
+
+### Coupon resources
+
+- **[<code>POST</code> coupon](https://github.com/husnulhamidiah/simple-cart-api/blob/master/docs/coupon/POST_coupon.md)**
+- **[<code>DELETE</code> coupon](https://github.com/husnulhamidiah/simple-cart-api/blob/master/docs/coupon/DELETE_coupon.md)**
+
+### Order resources
+
+- **[<code>POST</code> order](https://github.com/husnulhamidiah/simple-cart-api/blob/master/docs/order/POST_order.md)**
+- **[<code>GET</code> order](https://github.com/husnulhamidiah/simple-cart-api/blob/master/docs/order/GET_order.md)**
+- **[<code>POST</code> order/verify](https://github.com/husnulhamidiah/simple-cart-api/blob/master/docs/order/POST_order_verify.md)**
+- **[<code>GET</code> order/all](https://github.com/husnulhamidiah/simple-cart-api/blob/master/docs/order/GET_order_all.md)**
+- **[<code>POST</code> order/update](https://github.com/husnulhamidiah/simple-cart-api/blob/master/docs/order/POST_order_update.md)**
+- **[<code>POST</code> order/track](https://github.com/husnulhamidiah/simple-cart-api/blob/master/docs/order/POST_order_track.md)**
